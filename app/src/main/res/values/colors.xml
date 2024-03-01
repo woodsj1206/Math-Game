@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="player_1">#DF2027</color>
+    <color name="player_2">#1BA5DB</color>
+
+    <color name="background_color">#3023AE</color>
+    <color name="heading_color">#80000000</color>
+
+    <color name="text_color">#FFFFFFFF</color>
+
+</resources>

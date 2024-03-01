@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MathGame</string>
+    <string name="points">%1$s points</string>
+    <string name="jackpot_points">Jackpot: %1$s points</string>
+    <string name="score">Score:</string>
+    <string name="placeholder">\?</string>
+    <string name="roll_the_die">Roll the Die</string>
+    <string name="submit">Submit</string>
+    <string name="players_turn">%1$s\'s Turn</string>
+    <string name="player_wins">%1$s Wins!</string>
+    <string name="player_rolls_again_for_the_jackpot">%1$s rolls again for the Jackpot!</string>
+    <string name="player_loses_a_turn">%1$s loses a turn!</string>
+    <string name="player_rolls_again_with_double_points">%1$s rolls again with double points!</string>
+    <string name="addition">Addition:</string>
+    <string name="subtraction">Subtraction:</string>
+    <string name="multiplication">Multiplication:</string>
+    <string name="player_answered_incorrectly">%1$s answered incorrectly!</string>
+    <string name="player_answered_correctly">%1$s answered correctly!</string>
+</resources>
