@@ -30,4 +30,8 @@ class Player (name: String = "Player", color : Int = 0){
         this.multiplier = multiplier
     }
 
+    fun setPoints(points: Int){
+        this.points = points
+    }
+
 }

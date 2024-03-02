@@ -9,6 +9,7 @@ package com.example.mathgame
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.llQuestion.visibility = View.INVISIBLE
         binding.tvResult.visibility = View.INVISIBLE
+        binding.btnPlayAgain.visibility = Button.INVISIBLE
 
         binding.btnRollDie.setOnClickListener {
             binding.tvResult.visibility = View.INVISIBLE
@@ -82,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     binding.tvOperator.text = operator.toString()
                     binding.tvPanel2.text = rightOperand.toString()
 
-                    binding.btnRollDie.visibility = View.INVISIBLE
+                    binding.btnRollDie.visibility = Button.INVISIBLE
 
                     binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
                     binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
@@ -103,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     binding.tvOperator.text = operator.toString()
                     binding.tvPanel2.text = rightOperand.toString()
 
-                    binding.btnRollDie.visibility = View.INVISIBLE
+                    binding.btnRollDie.visibility = Button.INVISIBLE
 
                     binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
                     binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
@@ -151,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
                     binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
                     binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.btnRollDie.visibility = View.VISIBLE
+                    binding.btnRollDie.visibility = Button.VISIBLE
                 }
                 //Try for the jackpot.
                 6-> {
@@ -188,10 +190,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     else {
                         currentPlayer.addPoints(questionValue)
-
-                        if (currentPlayer.getMultiplier() >= 2) {
-                            currentPlayer.setMultiplier(1)
-                        }
                     }
                 }
                 else {
@@ -203,6 +201,10 @@ class MainActivity : AppCompatActivity() {
                     //If the player answers a question incorrectly then the jackpot will increase by the question's value.
                     jackpot += questionValue
                     tryingJackpot = false
+                }
+
+                if (currentPlayer.getMultiplier() >= 2) {
+                    currentPlayer.setMultiplier(1)
                 }
 
                 binding.llQuestion.visibility = View.INVISIBLE
@@ -217,9 +219,10 @@ class MainActivity : AppCompatActivity() {
                 if (currentPlayer.getPoints() >= 20) {
                     binding.tvStatus.text = getString(R.string.player_wins, currentPlayer.getPlayerName())
                     binding.tvResult.visibility = View.INVISIBLE
+                    binding.btnPlayAgain.visibility = Button.VISIBLE
                 }
                 else {
-                    binding.btnRollDie.visibility = View.VISIBLE
+                    binding.btnRollDie.visibility = Button.VISIBLE
 
                     currentPlayer = if (currentPlayer === player1) player2 else player1
 
@@ -227,6 +230,37 @@ class MainActivity : AppCompatActivity() {
                     binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
                 }
             }
+        }
+
+        binding.btnPlayAgain.setOnClickListener{
+            //Hide the Play Again button.
+            binding.btnPlayAgain.visibility = Button.INVISIBLE
+
+            //Reset the points for each player.
+            player1.setPoints(0)
+            player1.setMultiplier(1)
+
+            player2.setPoints(0)
+            player2.setMultiplier(1)
+
+            //Reset the jackpot points.
+            jackpot = 5
+
+            //Decide which player goes first.
+            currentPlayer = if(Random.nextInt(0,2) == 0) player1 else player2
+
+            //Display the points for each player.
+            binding.tvP1Score.text = getString(R.string.points, player1.getPoints().toString())
+            binding.tvP2Score.text = getString(R.string.points, player2.getPoints().toString())
+
+            //Display the jackpot.
+            binding.tvJackpot.text = getString(R.string.jackpot_points, jackpot.toString())
+
+            //Display the current player's turn.
+            binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
+            binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
+
+            binding.btnRollDie.visibility = Button.VISIBLE
         }
     }
 
