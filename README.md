@@ -10,7 +10,13 @@ The objective of the game is for players to earn points by correctly answering m
 
 ### Gameplay: 
 #### Rolling the Die
-Players take turns rolling the die. Each face of the die corresponds to an action listed below:
+Players take turns rolling the die.
+<br/>
+
+![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_roll_dice.png)
+<br/>
+
+Each face of the die corresponds to an action listed below:
 
 | Die Face  | Action |
 | ------------- | ------------- |
@@ -31,7 +37,14 @@ This game involves solving addition, subtraction, and multiplication problems. W
 | Multiplication  | 3 | 0 - 20 |
 
 *NOTE: A wrong answer will add the question's value to the jackpot.*
+<br/>
+
+![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_subtraction_problem.png)
+<br/>
 
 ### Goal:
 The goal of the game is to be the first player to reach 20 points.
+<br/>
+
+![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_wins.png)
 
