@@ -28,7 +28,13 @@ Each face of the die corresponds to an action listed below:
 | 6  | Try for the jackpot  |
 
 #### Type of Problems
-This game involves solving addition, subtraction, and multiplication problems. Whenever a player successfully answers a math problem, they will earn points based on the value assigned to the problem. Each type of math problem is limited to a specific range of numbers. Below is a table that lists the problem types along with their values and corresponding number ranges:
+This game involves solving addition, subtraction, and multiplication problems. 
+<br/>
+
+![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_subtraction_problem.png)
+<br/>
+
+Whenever a player successfully answers a math problem, they will earn points based on the value assigned to the problem. Each type of math problem is limited to a specific range of numbers. Below is a table that lists the problem types along with their values and corresponding number ranges:
 
 | Type of Problem | Value | Ranges |
 | ------------- | ------------- | ------------- |
@@ -39,8 +45,7 @@ This game involves solving addition, subtraction, and multiplication problems. W
 *NOTE: A wrong answer will add the question's value to the jackpot.*
 <br/>
 
-![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_subtraction_problem.png)
-<br/>
+
 
 ### Goal:
 The goal of the game is to be the first player to reach 20 points.
