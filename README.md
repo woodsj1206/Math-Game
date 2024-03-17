@@ -27,7 +27,7 @@ Each face of the die corresponds to an action listed below:
 | 5  | Lose a turn  |
 | 6  | Try for the jackpot  |
 
-#### Type of Problems
+#### Types of Problems
 This game involves solving addition, subtraction, and multiplication problems. 
 <br/>
 
