@@ -16,4 +16,5 @@
     <string name="multiplication">Multiplication:</string>
     <string name="player_answered_incorrectly">%1$s answered incorrectly!</string>
     <string name="player_answered_correctly">%1$s answered correctly!</string>
+    <string name="mulitplier_points">" x%1$s points"</string>
 </resources>

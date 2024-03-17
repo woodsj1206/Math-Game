@@ -1,9 +1,11 @@
-// App Name: MathGame
-// Author: woodsj1206 (https://github.com/woodsj1206)
-// Description: A simple two-player game to help children practice arithmetic.
-// Course: CIS 436
-// Date Created: 2/16/24
-// Last Modified: 3/1/24
+/*
+App Name: MathGame
+Author: woodsj1206 (https://github.com/woodsj1206)
+Description: A simple two-player game to help children practice arithmetic.
+Course: CIS 436
+Date Created: 2/16/24
+Last Modified: 3/17/24
+*/
 package com.example.mathgame
 
 import android.graphics.PorterDuff
@@ -18,39 +20,36 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
+
+    //Set the initial values for the game.
+    private val player1 = Player("Player 1", R.color.player_1)
+    private val player2 = Player("Player 2", R.color.player_2)
+
+    private var leftOperand = 0
+    private var rightOperand = 0
+    private var operator = ' '
+
+    //Jackpot starts at 5 points.
+    private var jackpot = 5
+    private var tryingJackpot = false
+
+    private var questionValue = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-
-        //Set the initial values for the game.
-        val player1 = Player("Player 1", R.color.player_1)
-        val player2 = Player("Player 2", R.color.player_2)
-
-        //Jackpot starts at 5 points.
-        var jackpot = 5
-
-        var leftOperand = 0
-        var rightOperand = 0
-        var operator = ' '
-
-        var tryingJackpot = false
-        var questionValue = 0
-
-        //Decide which player goes first.
-        var currentPlayer : Player = if(Random.nextInt(0,2) == 0) player1 else player2
 
         //Display the initial values in the text views.
         binding.tvPlayer1.text = player1.getPlayerName()
-        binding.tvP1Score.text = getString(R.string.points, player1.getPoints().toString())
-
         binding.tvPlayer2.text = player2.getPlayerName()
-        binding.tvP2Score.text = getString(R.string.points, player2.getPoints().toString())
 
-        //Display the jackpot.
-        binding.tvJackpot.text = getString(R.string.jackpot_points, jackpot.toString())
+        //Display the score and jackpot.
+        updateScore()
+
+        //Decide which player goes first.
+        var currentPlayer : Player = if(Random.nextInt(0,2) == 0) player1 else player2
 
         //Display the current player's turn.
         binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
@@ -79,17 +78,7 @@ class MainActivity : AppCompatActivity() {
 
                     questionValue = 1
 
-                    binding.tvQuestionType.text = getString(R.string.addition)
-                    binding.tvPanel1.text = leftOperand.toString()
-                    binding.tvOperator.text = operator.toString()
-                    binding.tvPanel2.text = rightOperand.toString()
-
-                    binding.btnRollDie.visibility = Button.INVISIBLE
-
-                    binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel3.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.llQuestion.visibility = View.VISIBLE
+                    updateDisplay(getString(R.string.addition), currentPlayer)
                 }
                 //Subtraction.
                 2-> {
@@ -100,17 +89,7 @@ class MainActivity : AppCompatActivity() {
 
                     questionValue = 2
 
-                    binding.tvQuestionType.text = getString(R.string.subtraction)
-                    binding.tvPanel1.text = leftOperand.toString()
-                    binding.tvOperator.text = operator.toString()
-                    binding.tvPanel2.text = rightOperand.toString()
-
-                    binding.btnRollDie.visibility = Button.INVISIBLE
-
-                    binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel3.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.llQuestion.visibility = View.VISIBLE
+                    updateDisplay(getString(R.string.subtraction), currentPlayer)
                 }
                 //Multiplication.
                 3-> {
@@ -121,47 +100,29 @@ class MainActivity : AppCompatActivity() {
 
                     questionValue = 3
 
-                    binding.tvQuestionType.text = getString(R.string.multiplication)
-                    binding.tvPanel1.text = leftOperand.toString()
-                    binding.tvOperator.text = operator.toString()
-                    binding.tvPanel2.text = rightOperand.toString()
-
-                    binding.btnRollDie.visibility = View.INVISIBLE
-
-                    binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.ivPanel3.setColorFilter(ContextCompat.getColor(this, currentPlayer.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
-                    binding.llQuestion.visibility = View.VISIBLE
+                    updateDisplay(getString(R.string.multiplication), currentPlayer)
                 }
                 //Roll again with chance to get double points.
                 4-> {
                     currentPlayer.setMultiplier(2)
 
-                    binding.tvResult.text = getString(R.string.player_rolls_again_with_double_points, currentPlayer.getPlayerName())
-                    binding.tvResult.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.tvResult.visibility = View.VISIBLE
+                    updateResult(getString(R.string.player_rolls_again_with_double_points, currentPlayer.getPlayerName()), currentPlayer)
                 }
                 //Lose a turn.
                 5-> {
                     //Display text for losing a turn.
-                    binding.tvResult.text = getString(R.string.player_loses_a_turn, currentPlayer.getPlayerName())
-                    binding.tvResult.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.tvResult.visibility = View.VISIBLE
+                    updateResult(getString(R.string.player_loses_a_turn, currentPlayer.getPlayerName()), currentPlayer)
 
                     //Switch to the next player.
                     currentPlayer = if(currentPlayer === player1) player2 else player1
 
-                    binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
-                    binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.btnRollDie.visibility = Button.VISIBLE
+                    updateStatus(getString(R.string.players_turn, currentPlayer.getPlayerName()), currentPlayer)
                 }
                 //Try for the jackpot.
                 6-> {
                     tryingJackpot = true
 
-                    binding.tvResult.text = getString(R.string.player_rolls_again_for_the_jackpot, currentPlayer.getPlayerName())
-                    binding.tvResult.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.tvResult.visibility = View.VISIBLE
+                    updateResult(getString(R.string.player_rolls_again_for_the_jackpot, currentPlayer.getPlayerName()), currentPlayer)
                 }
             }
         }
@@ -172,9 +133,7 @@ class MainActivity : AppCompatActivity() {
             if (validateInput(playerAnswer)) {
                 if (computeAnswer(leftOperand, operator, rightOperand) == playerAnswer.toInt()) {
                     //Display a message when a player gets the correct answer.
-                    binding.tvResult.text = getString(R.string.player_answered_correctly, currentPlayer.getPlayerName())
-                    binding.tvResult.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.tvResult.visibility = View.VISIBLE
+                    updateResult(getString(R.string.player_answered_correctly, currentPlayer.getPlayerName()), currentPlayer)
 
                     if (tryingJackpot) {
                         tryingJackpot = false
@@ -194,9 +153,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 else {
                     //Display a message when a player gets an incorrect answer.
-                    binding.tvResult.text = getString(R.string.player_answered_incorrectly, currentPlayer.getPlayerName())
-                    binding.tvResult.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-                    binding.tvResult.visibility = View.VISIBLE
+                    updateResult(getString(R.string.player_answered_incorrectly, currentPlayer.getPlayerName()), currentPlayer)
 
                     //If the player answers a question incorrectly then the jackpot will increase by the question's value.
                     jackpot += questionValue
@@ -211,9 +168,7 @@ class MainActivity : AppCompatActivity() {
                 binding.etPanel3.text.clear()
 
                 //Update scores and jackpot in the UI.
-                binding.tvP1Score.text = getString(R.string.points, player1.getPoints().toString())
-                binding.tvP2Score.text = getString(R.string.points, player2.getPoints().toString())
-                binding.tvJackpot.text = getString(R.string.jackpot_points, jackpot.toString())
+                updateScore()
 
                 //First player to reach 20 points wins.
                 if (currentPlayer.getPoints() >= 20) {
@@ -222,12 +177,9 @@ class MainActivity : AppCompatActivity() {
                     binding.btnPlayAgain.visibility = Button.VISIBLE
                 }
                 else {
-                    binding.btnRollDie.visibility = Button.VISIBLE
-
                     currentPlayer = if (currentPlayer === player1) player2 else player1
 
-                    binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
-                    binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
+                    updateStatus(getString(R.string.players_turn, currentPlayer.getPlayerName()), currentPlayer)
                 }
             }
         }
@@ -249,18 +201,10 @@ class MainActivity : AppCompatActivity() {
             //Decide which player goes first.
             currentPlayer = if(Random.nextInt(0,2) == 0) player1 else player2
 
-            //Display the points for each player.
-            binding.tvP1Score.text = getString(R.string.points, player1.getPoints().toString())
-            binding.tvP2Score.text = getString(R.string.points, player2.getPoints().toString())
-
-            //Display the jackpot.
-            binding.tvJackpot.text = getString(R.string.jackpot_points, jackpot.toString())
+            updateScore()
 
             //Display the current player's turn.
-            binding.tvStatus.text = getString(R.string.players_turn, currentPlayer.getPlayerName())
-            binding.tvStatus.setTextColor(ContextCompat.getColor(this, currentPlayer.getPlayerColor()))
-
-            binding.btnRollDie.visibility = Button.VISIBLE
+            updateStatus(getString(R.string.players_turn, currentPlayer.getPlayerName()), currentPlayer)
         }
     }
 
@@ -285,15 +229,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateDisplay(questionType : String, player : Player){
+        binding.tvQuestionType.text = if (player.getMultiplier() > 1 && !tryingJackpot) questionType.plus(getString(R.string.mulitplier_points, player.getMultiplier().toString())) else questionType
+
+        binding.tvPanel1.text = leftOperand.toString()
+        binding.tvOperator.text = operator.toString()
+        binding.tvPanel2.text = rightOperand.toString()
+        binding.btnRollDie.visibility = View.INVISIBLE
+
+        binding.ivPanel1.setColorFilter(ContextCompat.getColor(this, player.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
+        binding.ivPanel2.setColorFilter(ContextCompat.getColor(this, player.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
+        binding.ivPanel3.setColorFilter(ContextCompat.getColor(this, player.getPlayerColor()), PorterDuff.Mode.MULTIPLY)
+        binding.llQuestion.visibility = View.VISIBLE
+    }
+
+    private fun updateResult(resultText : String, player : Player){
+        binding.tvResult.text = resultText
+        binding.tvResult.setTextColor(ContextCompat.getColor(this, player.getPlayerColor()))
+        binding.tvResult.visibility = View.VISIBLE
+    }
+
+    private fun updateScore(){
+        //Display the jackpot.
+        binding.tvJackpot.text = getString(R.string.jackpot_points, jackpot.toString())
+
+        //Display the points for each player.
+        binding.tvP1Score.text = getString(R.string.points, player1.getPoints().toString())
+        binding.tvP2Score.text = getString(R.string.points, player2.getPoints().toString())
+    }
+
+    private fun updateStatus(statusText : String, player : Player){
+        binding.tvStatus.text = statusText
+        binding.tvStatus.setTextColor(ContextCompat.getColor(this, player.getPlayerColor()))
+        binding.btnRollDie.visibility = Button.VISIBLE
+    }
+
     private fun validateInput(playerAnswer: String?): Boolean {
-        return when {
-            playerAnswer.isNullOrEmpty()-> {
-                Toast.makeText(this, "Please enter an answer.", Toast.LENGTH_LONG).show()
-                return false
-            }
-            else-> {
-                return true
-            }
+        return if (playerAnswer.isNullOrEmpty()) {
+            Toast.makeText(this, "Please enter an answer.", Toast.LENGTH_LONG).show()
+            false
+        }
+        else {
+            true
         }
     }
 }
