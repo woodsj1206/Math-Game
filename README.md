@@ -1,3 +1,5 @@
+![Logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp)
+
 # Math-Game
 This application has been developed with Kotlin for Project 1 of  CIS 436.
 
