@@ -55,3 +55,6 @@ The goal of the game is to be the first player to reach 20 points.
 
 ![Screenshot](https://github.com/woodsj1206/Math-Game/blob/main/assets/screenshot_player_1_wins.png)
 
+## Development Environment
+- IDE: Android Studio Hedgehog | 2023.1.1 Patch 2
+- Language: Kotlin
